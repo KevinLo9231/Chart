@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chart.js Example</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src=”https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels”></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+	<style>
+        body{
+            font-family: '微軟正黑體', sans-serif;
+            background-color: #7795b32b;
+        }
+        /* .container {
+            max-width: 100% !important;
+            width: auto !important;
+        } */
+	</style>
+</head>
+<body>
+	<div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="chart-container p-3 mb-2 bg-light rounded-3">
+                    <span>報修申請</span>
+                    <canvas id="myChart"></canvas>
+                </div>
+                <div class="chart-container p-3 mb-2 bg-light rounded-3">
+                    <span>節能分析</span>
+                    <canvas id="myChart2"></canvas>
+                </div>
+            </div>
+            <div class="col">
+                <div class="chart-container p-3 mb-2 bg-light rounded-3">
+                    <div class="chart-container">
+                        <span>交接進度表</span>
+                        <canvas id="myChart3"></canvas>
+                    </div>
+                </div>        
+                <div class="row ">
+                    <div class="col-6">
+                        <div class="chart-container-pie p-3 mb-2 bg-light rounded-3">
+                            <span>報修類型分布圖</span>
+                            <canvas class ="pie" id="myChart4"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="chart-container-pie p-3 mb-2 bg-light rounded-3">
+                            <span>年費用預估</span>
+                            <canvas id="myChart5"></canvas>
+                        </div>
+                    </div>
+                </div>        
+            </div>		
+	</div>
+    
+    
+    <script>
+        var ctx = document.getElementById("myChart").getContext('2d');
+        var myChart = new Chart(ctx, {
+            data: {
+                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                datasets: [
+                    {
+                        label: '公共區域',
+                        type: 'bar', // 條狀圖
+                        data: [12, 19, 3, 5, 2, 3, 7, 8, 9, 10, 11, 12],
+                        backgroundColor: 'rgba(45, 153, 255)', // 條狀圖背景顏色
+                        borderColor: 'rgba(45, 153, 255, 1)', // 條狀圖邊框顏色
+                        borderWidth: 1,
+						barThickness: 10,
+						borderRadius: 5,
+                    },
+                    {
+                        label: '住戶宅內',
+                        type: 'line', // 折線圖
+                        data: [7, 11, 5, 8, 3, 7, 4, 6, 8, 9, 10, 11],
+                        borderColor: 'rgba(0, 171, 85, 1)', // 折線圖顏色
+                        backgroundColor: 'rgba(0, 171, 85, 0.1)', // 折線圖背景顏色（填充）
+                        fill: true, // 是否填充線下區域
+                        tension: 0.4 // 曲線的彎曲程度
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true // Y 軸從 0 開始
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true, // 顯示圖例
+                        labels: {
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            font: {
+                                size: 14 // 圖例字體大小
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+	<script>
+        var ctx = document.getElementById("myChart2").getContext('2d');
+        var myChart2 = new Chart(ctx, {
+            type: 'line', // 圖表類型為折線圖
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], // X 軸標籤
+                datasets: [
+                    {
+                        label: '電力',
+                        data: [7, 11, 5, 8, 3, 7, 4, 6, 8, 9, 10, 11], // 數據點
+                        backgroundColor: 'rgba(250, 310, 0, 0.1)', // 線條下方填充區域的顏色
+                        borderColor: 'rgba(250, 310, 0, 1)', // 線條顏色
+                        borderWidth: 3, // 線條寬度
+                        tension: 0.4, // 曲線的彎曲程度
+                        fill: true // 是否填充線下區域
+                    },
+                    {
+                        label: '水力',
+                        data: [5, 8, 3, 7, 4, 6, 8, 9, 10, 11, 7, 11], // 數據點
+                        backgroundColor: 'rgba(54, 162, 235, 0.1)', // 線條下方填充區域的顏色
+                        borderColor: 'rgba(54, 162, 235, 1)', // 線條顏色
+                        borderWidth: 3, // 線條寬度
+                        tension: 0.4, // 曲線的彎曲程度
+                        fill: true // 是否填充線下區域
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true // Y 軸從 0 開始
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true, // 顯示圖例
+                        labels: {
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            font: {
+                                size: 14 // 圖例字體大小
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+    <script>
+        var ctx = document.getElementById("myChart3").getContext('2d');
+        var myChart3 = new Chart(ctx, {
+            type: 'bar', // 使用條形圖
+            data: {
+                labels: ['點交', '點退', '待結案'], // X 軸標籤
+                datasets: [
+                    {
+                        label: '進度',
+                        data: [60, 23, 17], // 百分比數據
+                        backgroundColor: [
+                            'rgba(46, 204, 113, 1)', // 點交: 綠色
+                            'rgba(52, 152, 219, 1)', // 點退: 藍色
+                            'rgba(241, 196, 15, 1)'  // 待結案: 黃色
+                        ],
+                        borderRadius: 5, // 圓角效果
+                        barPercentage: 0.1, // 控制條形圖的寬度
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                indexAxis: 'y', // 將條形圖轉為水平
+                plugins: {
+                    legend: {
+                        display: false // 隱藏圖例
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return `${context.raw}%`; // 提示框顯示百分比
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 100, // X 軸最大值為 100
+                        ticks: {
+                            callback: function (value) {
+                                return `${value}%`; // 顯示百分比
+                            }
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            font: {
+                                size: 14 // Y 軸標籤字體大小
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+    <script>
+        var ctx = document.getElementById("myChart4").getContext('2d');
+        var myChart4 = new Chart(ctx, {
+            type: 'pie', // 圓餅圖
+            data: {
+                labels: ['住戶宅內', '公共區域', '定期保養', '緊急事件'], // 分類標籤
+                datasets: [{
+                    data: [28.4, 24.7, 24.2, 18.5], // 數據值（百分比）
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 1)', // 藍色（住戶宅內）
+                        'rgba(255, 205, 86, 1)', // 黃色（公共區域）
+                        'rgba(75, 192, 192, 1)', // 綠色（定期保養）
+                        'rgba(255, 99, 132, 1)'  // 紅色（緊急事件）
+                    ],
+                    borderWidth: 1 // 邊框寬度
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true, // 顯示圖例
+                        position: 'bottom', // 圖例位置
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            pointStyle: 'circle',
+                                font: {
+                                    size: 14
+                                }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let value = context.raw;
+                                return `${context.label}: ${value}%`;
+                            }
+                        }
+                    },
+                }
+            }
+        });
+    </script>
+    <script>
+    var ctx = document.getElementById("myChart5").getContext('2d');
+    const centerTextPlugin = {
+            id: 'centerText',
+            beforeDraw(chart) {
+                if(chart.canvas.id === 'myChart5') {
+                    const { width } = chart;
+                    const { height } = chart;
+                    const ctx = chart.ctx;
+                    ctx.restore();
+
+                    // 獲取 Doughnut 的中心點
+                    const fontSize = (height / 150).toFixed(2); // 動態計算字體大小
+                    ctx.font = `${fontSize}em sans-serif`;
+                    ctx.textBaseline = "middle";
+
+                    // 中間文字
+                    const text = "8,218,284"; // 顯示文字
+                    const textX = Math.round((width - ctx.measureText(text).width) / 2);
+                    const textY = height / 2;
+
+                    // 設定字體樣式與顏色
+                    ctx.fillStyle = "#000"; // 黑色文字
+                    ctx.fillText(text, textX, textY);
+
+                    ctx.save();
+                }          
+            }
+        };
+        // 註冊插件
+        Chart.register(centerTextPlugin);
+    var myChart5 = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['公共區域', '宅內'], // 分類標籤
+            datasets: [{
+                data: [6000000, 2218284], // 數據值
+                backgroundColor: [
+                    'rgba(255, 159, 64, 1)', // 公共區域顏色
+                    'rgba(54, 162, 235, 1)'  // 宅內顏色
+                ],
+                borderWidth: 2 // 圖表邊框寬度
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true, // 顯示圖例
+                    position: 'bottom',
+                    labels: {
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            let percentage = ((context.raw / total) * 100).toFixed(2);
+                            return `${context.label}: ${context.raw} (${percentage}%)`;
+                        }
+                    }
+                },
+            },
+            cutout: '85%' // 圓心的空白比例，數值越高空白越大
+        }
+    });
+</script>
+</body>
+</html>
