@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chart.js Example</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+    <style>
+        body {
+            font-family: '微軟正黑體', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-[#7795b32b] min-h-screen w-full m-0 p-5">
+    <div class="container mx-auto max-w-[1400px]">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- 左側欄 -->
+            <div class="space-y-4">
+                <!-- 報修申請 -->
+                <div class="bg-white p-3 rounded-lg shadow overflow-hidden">
+                    <span class="block mb-2 font-bold">報修申請</span>
+                    <div class="h-[300px] relative">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
+                <!-- 節能分析 -->
+                <div class="bg-white p-3 rounded-lg shadow overflow-hidden">
+                    <span class="block mb-2 font-bold">節能分析</span>
+                    <div class="h-[300px] relative">
+                        <canvas id="myChart2"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右側欄 -->
+            <div class="space-y-4">
+                <!-- 交接進度表 -->
+                <div class="bg-white p-3 rounded-lg shadow overflow-hidden">
+                    <span class="block mb-2 font-bold">交接進度表</span>
+                    <div class="h-[300px] relative">
+                        <canvas id="myChart3"></canvas>
+                    </div>
+                </div>
+                <!-- 下方兩個圓餅圖 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- 報修類型分布圖 -->
+                    <div class="bg-white p-3 rounded-lg shadow">
+                        <span class="block mb-2 font-bold">報修類型分布圖</span>
+                        <div class="h-[300px] md:h-[250px] relative">
+                            <canvas id="myChart4"></canvas>
+                        </div>
+                    </div>
+                    <!-- 年費用預估 -->
+                    <div class="bg-white p-3 rounded-lg shadow">
+                        <span class="block mb-2 font-bold">年費用預估</span>
+                        <div class="h-[300px] md:h-[250px] relative">
+                            <canvas id="myChart5"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 以下 Script 部分保持不變 -->
+    <script>
+        // 中心文字插件定義
+        const centerTextPlugin = {
+            id: 'centerText',
+            beforeDraw(chart) {
+                if (chart.canvas.id === 'myChart5') {
+                    const { width, height } = chart;
+                    const ctx = chart.ctx;
+                    ctx.restore();
+                    const fontSize = (height / 150).toFixed(2);
+                    ctx.font = `${fontSize}em sans-serif`;
+                    ctx.textBaseline = "middle";
+                    const text = "8,218,284";
+                    const textX = Math.round((width - ctx.measureText(text).width) / 2);
+                    const textY = height / 2;
+                    ctx.fillStyle = "#000";
+                    ctx.fillText(text, textX, textY);
+                    ctx.save();
+                }
+            }
+        };
+
+        // 註冊插件
+        Chart.register(centerTextPlugin);
+
+        // 初始化所有圖表
+        document.addEventListener('DOMContentLoaded', function () {
+            // 報修申請圖表
+            const chart1 = new Chart(document.getElementById("myChart").getContext('2d'), {
+                data: {
+                    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                    datasets: [
+                        {
+                            label: '公共區域',
+                            type: 'bar',
+                            data: [12, 19, 3, 5, 2, 3, 7, 8, 9, 10, 11, 12],
+                            backgroundColor: 'rgba(45, 153, 255)',
+                            borderColor: 'rgba(45, 153, 255, 1)',
+                            borderWidth: 1,
+                            barThickness: 10,
+                            borderRadius: 5,
+                        },
+                        {
+                            label: '住戶宅內',
+                            type: 'line',
+                            data: [7, 11, 5, 8, 3, 7, 4, 6, 8, 9, 10, 11],
+                            borderColor: 'rgba(0, 171, 85, 1)',
+                            backgroundColor: 'rgba(0, 171, 85, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                font: { size: 14 }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 節能分析圖表
+            const chart2 = new Chart(document.getElementById("myChart2").getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [
+                        {
+                            label: '電力',
+                            data: [7, 11, 5, 8, 3, 7, 4, 6, 8, 9, 10, 11],
+                            backgroundColor: 'rgba(250, 310, 0, 0.1)',
+                            borderColor: 'rgba(250, 310, 0, 1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: '水力',
+                            data: [5, 8, 3, 7, 4, 6, 8, 9, 10, 11, 7, 11],
+                            backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                font: { size: 14 }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 交接進度表圖表
+            const chart3 = new Chart(document.getElementById("myChart3").getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['點交', '點退', '待結案'],
+                    datasets: [{
+                        label: '進度',
+                        data: [60, 23, 17], // 百分比數據
+                        backgroundColor: [
+                            'rgba(46, 204, 113, 1)', // 點交: 綠色
+                            'rgba(52, 152, 219, 1)', // 點退: 藍色
+                            'rgba(241, 196, 15, 1)'  // 待結案: 黃色
+                        ],
+                        borderRadius: 5,
+                        barPercentage: 0.1,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: context => `${context.raw}%`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: value => `${value}%`
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                font: { size: 14 }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 報修類型分布圖
+            const chart4 = new Chart(document.getElementById("myChart4").getContext('2d'), {
+                type: 'pie',
+                data: {
+                    labels: ['住戶宅內', '公共區域', '定期保養', '緊急事件'],
+                    datasets: [{
+                        data: [28.4, 24.7, 24.2, 18.5],
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 205, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(255, 99, 132, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 10,
+                                pointStyle: 'circle',
+                                boxWidth: 8,
+                                font: { size: 12 }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: context => `${context.label}: ${context.raw}%`
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 年費用預估圖表
+            const chart5 = new Chart(document.getElementById("myChart5").getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['公共區域', '宅內'],
+                    datasets: [{
+                        data: [6000000, 2218284],
+                        backgroundColor: [
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(54, 162, 235, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 10,
+                                pointStyle: 'circle',
+                                boxWidth: 8,
+                                font: { size: 12 }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    let percentage = ((context.raw / total) * 100).toFixed(2);
+                                    return `${context.label}: ${context.raw} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '85%'
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
